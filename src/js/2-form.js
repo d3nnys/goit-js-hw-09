@@ -8,25 +8,35 @@ const refs = {
     textarea: document.querySelector('[name="message"]'),
 };
 
-function inputHandler(event) {
-    const { name, value } = event.target;
-    const takesValue = JSON.parse(localStorage.getItem(storageKey)) || {};
-    takesValue[name] = value.trim();
-    localStorage.setItem(storageKey, JSON.stringify(takesValue));
+function inputHandler() {
+    const email = refs.input.value.trim();
+    const message = refs.textarea.value.trim();
+    
+    return {
+        email,
+        message
+    }
 }
 
-refs.form.addEventListener('input', inputHandler);
-refs.form.addEventListener('submit', submitHandler);
-
-function submitHandler(event) {
+refs.form.addEventListener('submit', (event) => {
     event.preventDefault();
-    const takesValue = JSON.parse(localStorage.getItem(storageKey)) || {};
-    console.log({
-        email: takesValue.email,
-        message: takesValue.message,
-    });
 
     localStorage.removeItem(storageKey);
-    refs.input.value = '';
-    refs.textarea.value = '';
+    refs.form.reset();
+})
+
+refs.form.addEventListener('input', (event) => {
+    event.preventDefault();
+
+    const data = inputHandler(event.currentTarget);
+    const jsonData = JSON.stringify(data);
+    localStorage.setItem(storageKey, jsonData);
+})
+
+const takesItem = localStorage.getItem(storageKey);
+
+if (takesItem ) {
+    const data = JSON.parse(takesItem);
+    refs.input.value = data.email;
+    refs.textarea.value = data.message;
 }
