@@ -26,11 +26,13 @@ refs.form.addEventListener('submit', (event) => {
         console.log({
             email: takesValue.email,
             message: takesValue.message,
+
         });
+        
+        localStorage.removeItem(storageKey);
+        refs.form.reset();
     }
 
-    localStorage.removeItem(storageKey);
-    refs.form.reset();
 })
 
 refs.form.addEventListener('input', (event) => {
